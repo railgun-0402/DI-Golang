@@ -1,17 +1,27 @@
 package main
 
 import (
-	"log"
+	"fmt"
 
-	"github.com/labstack/echo/v4"
+	"github.com/railgun-0402/DI-Golang/app/infra"
+	usecase "github.com/railgun-0402/DI-Golang/app/usecase/product"
 )
 
 
 func main() {
-	// Echoインスタンス作成
-	e := echo.New()
+	repo := infra.NewMemory()
+	uc := usecase.NewProductUsecase(repo)
 
-	log.Println("Server running on :8080")
-	// log.Fatal(http.ListenAndServe(":8080", handler))
-	log.Fatal(e.Start(":8080"))
+	p, err := uc.Save("sample001", "Sample Product", "This is Sample Product", 1000, 15)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Printf("Registered product: %+v\n", p)
+
+	found, err := repo.FindByID(p.ID)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Printf("Found Product: %+v\n", found)
 }

@@ -1,4 +1,4 @@
-package product
+package domain
 
 import (
 	"errors"
@@ -8,12 +8,11 @@ import (
 )
 
 type Product struct {
-	id string
-	ownerID string
-	name string
-	description string
-	price int64
-	stock int
+	ID string
+	Name string
+	Description string
+	Price int64
+	Stock int
 }
 
 const (
@@ -24,24 +23,14 @@ const (
 	MaxDescriptionLength = 1000
 )
 
-func isValid(s string) bool {
-	_, err := ulid.Parse(s)
-	return err == nil
-}
-
-func NewProduct (
+// TODO: テストコードを実装する
+func newProduct (
 	id string,
-	ownerID string,
 	name string,
 	description string,
 	price int64,
 	stock int,
 ) (*Product, error) {
-	// ownerIDバリデーション
-	if !isValid(ownerID) {
-		return nil, errors.New("ownerIDが不正です")
-	}
-
 	if utf8.RuneCountInString(name) < MinNameLength {
 		return nil, errors.New("商品名を入力してください。")
 	}
@@ -67,11 +56,42 @@ func NewProduct (
 		return nil, errors.New("在庫数の値が不正です。")
 	}
 	return &Product{
-		id: id,
-		ownerID: ownerID,
-		name: name,
-		description: description,
-		price: price,
-		stock: stock,
+		ID: id,
+		Name: name,
+		Description: description,
+		Price: price,
+		Stock: stock,
 	}, nil
+}
+
+func Reconstruct(
+	id string,
+	name string,
+	description string,
+	price int64,
+	stock int,
+) (*Product, error) {
+	return newProduct(
+		id,
+		name,
+		description,
+		price,
+		stock,
+	)
+}
+
+func NewProduct(
+	ownerID string,
+	name string,
+	description string,
+	price int64,
+	stock int,
+) (*Product, error) {
+	return newProduct(
+		ulid.Make().String(),
+		name,
+		description,
+		price,
+		stock,
+	)
 }
