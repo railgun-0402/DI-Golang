@@ -2,8 +2,11 @@ package main
 
 import (
 	"fmt"
+	"log"
+	"net/http"
 
 	"github.com/railgun-0402/DI-Golang/app/infra"
+	cog "github.com/railgun-0402/DI-Golang/app/infra/aws/cognito"
 	usecase "github.com/railgun-0402/DI-Golang/app/usecase/product"
 )
 
@@ -24,4 +27,15 @@ func main() {
 		panic(err)
 	}
 	fmt.Printf("Found Product: %+v\n", found)
+}
+
+
+func cognito() {
+	http.HandleFunc("/", cog.HandleHome)
+	http.HandleFunc("/login", cog.HandleLogin)
+	http.HandleFunc("/logout", cog.HandleLogout)
+	http.HandleFunc("/callback", cog.HandleCallback)
+
+	fmt.Println("Server is running on http://localhost:8080")
+	log.Fatal(http.ListenAndServe(":8080", nil))
 }
