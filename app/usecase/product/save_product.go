@@ -10,7 +10,6 @@ func NewProductUsecase(repo domain.ProductRepositoy) *ProductUsecase {
 	return &ProductUsecase{Repo: repo}
 }
 
-
 func (uc *ProductUsecase) Save(id, name, description string, price int64, stock int) (*domain.Product, error) {
 	p, err := domain.NewProduct(id, name, description, price, stock)
 	if err != nil {
