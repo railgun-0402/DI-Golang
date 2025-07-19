@@ -5,6 +5,7 @@ import (
 	"time"
 )
 
+// メッセージを送る通知情報
 type Notification struct {
 	ID        string    `dynamodbav:"id"`
 	UserID    string    `dynamodbav:"user_id"`
@@ -15,4 +16,9 @@ type Notification struct {
 
 type NotificationRepository interface {
 	Save(ctx context.Context, n Notification) error
+}
+
+// Publish
+type Notifier interface {
+	Notify(ctx context.Context, message string) error
 }
