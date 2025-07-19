@@ -16,9 +16,10 @@ import (
 	usecase "github.com/railgun-0402/DI-Golang/app/usecase/device"
 )
 
-
+// TODO: 早くhandlerごとに処理をまとめてmain.goを綺麗にしてえ(現状やばすぎ)
 func main() {
-	cfg, _ := config.LoadDefaultConfig(context.TODO())
+	ctx := context.Background()
+	cfg, _ := config.LoadDefaultConfig(ctx)
 	db := dynamodb.NewFromConfig(cfg)
 
 	tableName := os.Getenv("DEVICE_TABLE_NAME")
@@ -33,23 +34,6 @@ func main() {
 	e.Logger.Fatal(e.Start(":8080"))
 }
 
-// func product() {
-// 	repo := infra.NewMemory()
-// 	uc := usecase.NewProductUsecase(repo)
-
-// 	p, err := uc.Save("sample001", "Sample Product", "This is Sample Product", 1000, 15)
-// 	if err != nil {
-// 		panic(err)
-// 	}
-
-// 	fmt.Printf("Registered product: %+v\n", p)
-
-// 	found, err := repo.FindByID(p.ID)
-// 	if err != nil {
-// 		panic(err)
-// 	}
-// 	fmt.Printf("Found Product: %+v\n", found)
-// }
 
 func cognito() {
 	http.HandleFunc("/", cog.HandleHome)
