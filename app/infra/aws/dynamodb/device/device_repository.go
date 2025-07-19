@@ -18,6 +18,7 @@ func NewDynamoDeviceRepository(c *dynamodb.Client, table string) domain.DeviceRe
 	return &DynamoDeviceRepository{Client: c, TableName: table}
 }
 
+// TODO: NotificationのSaveとほぼ同じ実装だから共通化する(今日はもう眠いぜよ)
 func (r *DynamoDeviceRepository) Save(device domain.Device) error {
 	item, err := attributevalue.MarshalMap(device)
 	if err != nil {
