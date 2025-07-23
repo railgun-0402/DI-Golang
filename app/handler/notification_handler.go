@@ -23,6 +23,7 @@ func NewNotificationHandler(u *usecase.NotificationUsecase) *NotificationHandler
 	}
 }
 
+// Enqueue はリクエスト値のバリデーションとusecaseの呼び出しをします
 func (h *NotificationHandler) Enqueue(c echo.Context) error {
 	var req EnqueueRequest
 	if err := c.Bind(&req); err != nil {

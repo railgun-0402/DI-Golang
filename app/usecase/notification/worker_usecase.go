@@ -24,8 +24,11 @@ func NewWorkerUsecase(q domain.Queue, n domain.Notifier, r domain.NotificationRe
 	}
 }
 
+// Run はSQS→JSON parse→DynamoDBヘメッセージを保存→SQSからメッセージ削除
 func (uc *WorkerUsecase) Run(ctx context.Context) {
+	// Workerは常駐プロセス
 	for {
+		// SQSからメッセージを受信し、失敗したら少し待ってリトライ
 		msgs, err := uc.queue.ReceiveMessages(ctx)
 		if err != nil {
 			log.Println("failed to receive messages:", err)
@@ -51,9 +54,9 @@ func (uc *WorkerUsecase) Run(ctx context.Context) {
 				log.Println("failed to save:", err)
 			}
 
-			// if err := uc.queue.DeleteMessage(ctx, msg.ReceiptHandle); err != nil {
-			// 	log.Println("failed to delete message:", err)
-			// }
+			if err := uc.queue.DeleteMessage(ctx, msg.ReceiptHandle); err != nil {
+				log.Println("failed to delete message:", err)
+			}
 		}
 	}
 }

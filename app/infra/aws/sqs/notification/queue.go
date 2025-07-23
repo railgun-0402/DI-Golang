@@ -17,11 +17,12 @@ func NewQueue(c *sqs.Client, url string) *Queue {
 	return &Queue{client: c, queueURL: url}
 }
 
+// ReceiveMessages はWorkerがキューからメッセージを受け取ります
 func (q *Queue) ReceiveMessages(ctx context.Context) ([]domain.Message, error) {
 	out, err := q.client.ReceiveMessage(ctx, &sqs.ReceiveMessageInput{
 		QueueUrl:            aws.String(q.queueURL),
-		MaxNumberOfMessages: 10,
-		WaitTimeSeconds:     10,
+		MaxNumberOfMessages: 10, // 一度にmax10件受け取る
+		WaitTimeSeconds:     10, // ロングポーリングを10s待つ
 	})
 	if err != nil {
 		return nil, err
@@ -37,6 +38,7 @@ func (q *Queue) ReceiveMessages(ctx context.Context) ([]domain.Message, error) {
 	return msgs, nil
 }
 
+// DeleteMessage はWorkerがメッセージを削除する
 func (q *Queue) DeleteMessage(ctx context.Context, receiptHandle string) error {
 	_, err := q.client.DeleteMessage(ctx, &sqs.DeleteMessageInput{
 		QueueUrl:      aws.String(q.queueURL),
@@ -45,6 +47,7 @@ func (q *Queue) DeleteMessage(ctx context.Context, receiptHandle string) error {
 	return err
 }
 
+// Enqueue はusecaseから受け取った値をSQSへ実際に送る処理
 func (q *Queue) Enqueue(ctx context.Context, message string) error {
 	_, err := q.client.SendMessage(ctx, &sqs.SendMessageInput{
 		QueueUrl:    aws.String(q.queueURL),

@@ -21,22 +21,6 @@ import (
 	usecase "github.com/railgun-0402/DI-Golang/app/usecase/notification"
 )
 
-// func New(addr string) {
-// 	cfg, _ := config.LoadDefaultConfig(context.Background())
-// 	queueURL := os.Getenv("SQS_QUEUE_URL")
-
-// 	sqsClient := sqs.NewFromConfig(cfg)
-// 	queue := sqs_repository.NewNotificationQueue(sqsClient, queueURL)
-
-// 	uc := usecase.NewNotificationUsecase(queue)
-// 	h := handler.NewNotificationHandler(uc)
-
-// 	e := echo.New()
-// 	e.POST("/notifications", h.Enqueue)
-
-// 	log.Fatal(http.ListenAndServe(addr, nil))
-// }
-
 func cognito() {
 	http.HandleFunc("/", cog.HandleHome)
 	http.HandleFunc("/login", cog.HandleLogin)
@@ -47,6 +31,7 @@ func cognito() {
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
 
+// RunWorker はWorkerを起動する関数
 func RunWorker(ctx context.Context) {
 	cfg, _ := config.LoadDefaultConfig(ctx)
 
@@ -68,6 +53,7 @@ func RunWorker(ctx context.Context) {
 	h.Run(ctx)
 }
 
+// NewAPI は単純にAPIを起動する関数
 func NewAPI() *echo.Echo {
 	ctx := context.Background()
 	cfg, _ := config.LoadDefaultConfig(ctx)
