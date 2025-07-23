@@ -21,6 +21,7 @@ func NewNotificationUsecase(q domain.Queue, repo domain.NotificationRepository) 
 	}
 }
 
+// Enqueue はリクエストから受け取った値をキューに送る
 func (u *NotificationUsecase) Enqueue(ctx context.Context, userID, title, message string) error {
 	n := domain.Notification{
 		ID: uuid.New().String(),

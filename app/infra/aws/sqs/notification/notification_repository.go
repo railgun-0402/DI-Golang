@@ -15,12 +15,3 @@ func NewNotificationQueue(c *sqs.Client, url string) *NotificationQueue {
 		QueueURL: url,
 	}
 }
-
-// func (q *NotificationQueue) Enqueue(ctx context.Context, n domain.Notification) error {
-// 	body, _ := json.Marshal(n)
-// 	_, err := q.Client.SendMessage(ctx, &sqs.SendMessageInput{
-// 		QueueUrl:    aws.String(q.QueueURL),
-// 		MessageBody: aws.String(string(body)),
-// 	})
-// 	return err
-// }
