@@ -16,6 +16,7 @@ type Notification struct {
 
 type NotificationRepository interface {
 	Save(ctx context.Context, n Notification) error
+	// GetAll(ctx context.Context, n Notification) ([]Notification, error)
 }
 
 // Publish
